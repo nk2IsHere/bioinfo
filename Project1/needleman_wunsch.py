@@ -5,6 +5,15 @@ from utils import AlignmentScoreMatrix, create_alignment_score_matrix, Traceback
 
 
 class NeedlemanWunschInput(NamedTuple):
+    """
+    Needleman-Wunsch algorithm input.
+
+    dna1: str - DNA sequence 1.
+    dna2: str - DNA sequence 2.
+    maximal_final_alignments_count: int - Maximal number of final alignments to generate.
+    alignment_score_matrix: AlignmentScoreMatrix - Alignment score matrix.
+    gap_penalty: int - Gap penalty.
+    """
     dna1: str
     dna2: str
     maximal_final_alignments_count: int = 10
@@ -13,6 +22,14 @@ class NeedlemanWunschInput(NamedTuple):
 
 
 class NeedlemanWunschOutput(NamedTuple):
+    """
+    Needleman-Wunsch algorithm output.
+
+    aligned_dna1: str - Aligned DNA sequence 1.
+    aligned_dna2: str - Aligned DNA sequence 2.
+    final_score: float - Final alignment score.
+    score_matrix: List[List[float]] - Score matrix.
+    """
     aligned_dna1: str
     aligned_dna2: str
     final_score: float
@@ -26,6 +43,18 @@ def needleman_wunsch_generate_score_matrix(
     alignment_score_matrix: AlignmentScoreMatrix,
     gap_penalty: int
 ) -> List[List[float]]:
+    """
+    Generate Needleman-Wunsch score matrix.
+
+    The score matrix is a 2D list of floats with dimensions (len(dna1) + 1) x (len(dna2) + 1).
+    The score matrix is filled with scores for each possible alignment of the two DNA sequences.
+
+    :param dna1: str - DNA sequence 1.
+    :param dna2: str - DNA sequence 2.
+    :param alignment_score_matrix: AlignmentScoreMatrix - Alignment score matrix.
+    :param gap_penalty: int - Gap penalty.
+    :return: List[List[float]] - Score matrix.
+    """
     score_matrix = [
         [0 for _ in range(len(dna2) + 1)]
         for _ in range(len(dna1) + 1)
@@ -55,6 +84,17 @@ def needleman_wunsch_generate_dna_alignments(
     dna2: str,
     traceback: List[TracebackAction]
 ) -> Tuple[str, str, List[List[TracebackAction | None]]]:
+    """
+    Generate DNA alignments from Needleman-Wunsch traceback.
+
+    The Needleman-Wunsch traceback is a list of actions that describe the optimal alignment of two DNA sequences.
+    The traceback is used to reconstruct the aligned DNA sequences and the traceback matrix.
+
+    :param dna1: str - DNA sequence 1.
+    :param dna2: str - DNA sequence 2.
+    :param traceback: List[TracebackAction] - Needleman-Wunsch traceback.
+    :return: Tuple[str, str, List[List[TracebackAction | None]]] - Aligned DNA sequences and traceback matrix.
+    """
     dna1_i = len(dna1)
     dna2_j = len(dna2)
     dna1_aligned = []
@@ -90,6 +130,16 @@ def needleman_wunsch_generate_dna_alignments(
 
 
 def needleman_wunsch(needleman_wunsch_input: NeedlemanWunschInput) -> Generator[NeedlemanWunschOutput, None, None]:
+    """
+    Needleman-Wunsch algorithm.
+
+    The Needleman-Wunsch algorithm is a dynamic programming algorithm that finds the optimal alignment of two DNA
+    sequences. The algorithm uses a score matrix to calculate the score of each possible alignment and a traceback
+    matrix to reconstruct the optimal alignment.
+
+    :param needleman_wunsch_input: NeedlemanWunschInput - Needleman-Wunsch algorithm input.
+    :return: Generator[NeedlemanWunschOutput, None, None] - Generator of Needleman-Wunsch algorithm output.
+    """
     dna1, dna2, maximal_final_alignments_count, alignment_score_matrix, gap_penalty = needleman_wunsch_input
     score_matrix = needleman_wunsch_generate_score_matrix(
         dna1,
@@ -151,6 +201,15 @@ def draw_needleman_wunsch(
     needleman_wunsch_input: NeedlemanWunschInput,
     needleman_wunsch_output: NeedlemanWunschOutput
 ):
+    """
+    Draw Needleman-Wunsch algorithm visualization.
+
+    The visualization includes the Needleman-Wunsch score matrix with traceback and final alignment path.
+
+    :param needleman_wunsch_input: NeedlemanWunschInput - Needleman-Wunsch algorithm input.
+    :param needleman_wunsch_output: NeedlemanWunschOutput - Needleman-Wunsch algorithm output.
+    :return: None
+    """
     score_matrix = needleman_wunsch_output.score_matrix
 
     # Draw score matrix
