@@ -1,0 +1,15 @@
+Global alignment no. 1:
+TGCTCG-TA
+T--TC-ATA
+Score: 17.0
+
+Global alignment no. 2:
+TGCTC-GTA
+T--TCA-TA
+Score: 17.0
+
+Global alignment no. 3:
+TGCTCGTA
+T--TCATA
+Score: 17.0
+
