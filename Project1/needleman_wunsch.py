@@ -148,6 +148,7 @@ def needleman_wunsch(needleman_wunsch_input: NeedlemanWunschInput) -> Generator[
         gap_penalty
     )
 
+    final_alignments_count = 0
     current_position_with_traceback = [(len(dna1), len(dna2), [])]
     while current_position_with_traceback:
         i, j, current_traceback = current_position_with_traceback.pop()
@@ -166,6 +167,10 @@ def needleman_wunsch(needleman_wunsch_input: NeedlemanWunschInput) -> Generator[
                 score_matrix=score_matrix,
                 traceback_matrix=traceback_matrix
             )
+
+            final_alignments_count += 1
+            if final_alignments_count >= maximal_final_alignments_count:
+                break
 
             continue
 
