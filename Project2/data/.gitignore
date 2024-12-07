@@ -2,3 +2,4 @@
 *.tsv.gz
 *.fa
 *.fa.gz
+*.fai
