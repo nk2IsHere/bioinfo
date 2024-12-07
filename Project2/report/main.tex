@@ -1,0 +1,424 @@
+%! suppress = LineBreak
+\documentclass[11pt, a4paper, hidelinks]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{a4paper, margin=0.5in}
+\usepackage{fancyhdr}
+\usepackage{indentfirst} % Add this line to enable first paragraph indentation
+\usepackage{times} % Use Times New Roman font
+\usepackage{setspace}
+\usepackage[width=0.9\textwidth]{caption}
+\usepackage{array}
+\usepackage{float}
+\usepackage{makecell}
+
+\setstretch{1.0} % Adjust the stretch factor as needed
+
+\pagestyle{fancy}
+\fancyhf{}  % Clear header and footer fields
+\rfoot{\thepage}  % Place page number at the right bottom corner
+\renewcommand{\headrulewidth}{0pt}  % Remove the header line
+
+\begin{document}
+
+% Title Page
+\begin{titlepage}
+    \centering
+    \vspace*{0.5 cm}
+    \includegraphics[width=0.20\textwidth]{logo.png}\par\vspace{1cm}
+    {\scshape\LARGE Warsaw University of Technology \par}
+    \vspace{1cm}
+    {\scshape\Large Faculty of Mathematics and Information Science\par}
+    \vspace{1.5cm}
+    {\huge\bfseries Project 2 Report\par}
+    \vspace{1cm}
+    {\Large\itshape Bioinformatics\par}
+    \vfill
+    % \vspace{2cm}
+    \begin{flushright}
+
+    {\Large\bfseries Nikita Kozlov (317099)\par}
+    \vfill
+    {supervisor\par}
+    {\Large dr Michał Własnowolski \par}
+
+    \end{flushright}
+    \vfill
+    % \break
+    {\large Warsaw 2024\par}
+    \vspace{1cm}
+\end{titlepage}
+
+\tableofcontents
+
+\newpage
+
+\section{Introduction}\label{sec:introduction}
+\addcontentsline{}{section}{Introduction}
+
+% The goal of Project 2 is to train a classifier capable of predicting enhancer sequences
+%based on DNA sequence data using the frequency of k-mers
+
+\subsection{Aim}\label{subsec:aim}
+
+The goal of this Project is to train a classifier capable of predicting enhancer sequences based on DNA sequence data using the frequency of k-mers.
+The classifier will be trained on the data from the VISTA Enhancer Database and tested on the data from the GENCODE Project.
+Additionally, the dataset consisting of random DNA sequences that do not appear in the VISTA Enhancer Database as positive examples will be used to train an additional classifier to distinguish between enhancer and non-enhancer sequences.
+These classifiers will be evaluated on the evaluation dataset composed of the data both from VIStA Enhancer Database and GENCODE Project.
+Their performance will be compared and discussed.
+
+\subsection{Biological Background}\label{subsec:biological-background}
+
+Enhancers are non-coding DNA sequences that play a critical role in regulating gene expression. 
+Located on chromatin, they can be up to 1 megabase (Mbp) away from their target gene promoters. 
+Despite this physical distance, enhancers interact with promoters through 3D chromatin looping, enabling the recruitment of transcriptional machinery such as RNA Polymerase II, which boosts gene transcription. 
+These regulatory elements contribute significantly to genetic diversity and evolution; for example, many genetic differences between humans and primates like chimpanzees lie in enhancer regions, affecting gene regulation rather than protein-coding sequences.
+
+A key feature of enhancers is the presence of Transcription Factor Binding Sites (TFBS)-specific DNA motifs where transcription factors bind.
+These factors orchestrate transcriptional activation by recruiting RNA Polymerase II and facilitating enhancer-promoter spatial interactions.
+Variations in enhancer sequences among individuals influence gene expression and can be linked to diseases caused by dysregulated gene function.
+
+Studying enhancers is essential for understanding gene regulation, the physiological impact of mutations on gene expression, and genetic diversity across individuals and species.
+This knowledge has profound implications for personalized medicine, disease research, and the study of evolutionary biology.
+
+\subsection{Data}\label{subsec:data}
+\begin{enumerate}
+    \item VISTA Enhancer Database: A curated database of experimentally validated enhancers, primarily focused on human and mouse genomes. These sequences serve as positive examples of enhancers.
+    \item GENCODE Project: A comprehensive annotation of human and mouse genomes, providing additional DNA sequence data for testing the model's predictive capabilities.
+    \item Random DNA Sequences: These sequences do not overlap with validated enhancers in the VISTA database and are used as negative examples for training and evaluation.
+\end{enumerate}
+
+
+\section{Methodology}\label{sec:methodology}
+
+\subsection{Data Preprocessing}\label{subsec:data-preprocessing}
+
+Before training the classifier, the following preprocessing steps were performed to prepare the data:
+
+\begin{enumerate}
+
+    \item Data Collection and Parsing:
+    \begin{itemize}
+        \item Positive Examples: DNA sequences with a curation status of 'positive' were extracted from the VISTA Enhancer Database (experiments.tsv.gz). These sequences represent experimentally validated enhancers.
+        \item Negative Examples:
+            \begin{itemize}
+            \item Sequences with a curation status of 'negative' were extracted from the same VISTA database.
+            \item Random sequences were generated from the GRCh38 genome FASTA file, ensuring:
+            \begin{itemize}
+                \item No overlap with known enhancer sequences.
+                \item Equal sequence lengths to the positive examples.
+                \item Exclusion of sequences containing ambiguous nucleotides (N).
+            \end{itemize}
+        \end{itemize}
+    \end{itemize}
+
+    \item Sequence Standardization:
+    \begin{itemize}
+        \item All DNA sequences were normalized to uppercase letters (A, T, C, G) for uniformity.
+        \item Sequences with invalid characters (e.g., N) or other anomalies were excluded to maintain data quality.
+    \end{itemize}
+
+    \item K-mer Feature Extraction:
+    \begin{itemize}
+        \item A sliding window approach was implemented to extract k-mers of lengths ranging from 3 to 10 nucleotides from each sequence.
+        \item The frequency of each k-mer was calculated by dividing its count by the total length of the sequence, ensuring consistent scaling across varying sequence lengths.
+        \item Reverse complements of k-mers were treated as equivalent to reduce redundancy, with palindromic k-mers (e.g., ATCG == CGAT) counted only once. The Bio.Seq.reverse\_complement() function from Biopython was used for this purpose.
+    \end{itemize}
+
+    \item Label Assignment:
+    \begin{itemize}
+        \item Positive sequences were labeled as 1 (enhancers).
+        \item Negative sequences were labeled as 0 (non-enhancers).
+    \end{itemize}
+
+    \item Dataset Balancing:
+    \begin{itemize}
+        \item An equal number of positive and negative sequences were ensured to prevent class imbalance during training.
+        \item The lengths of negative sequences were matched to those of the positive examples for consistency in feature representation.
+    \end{itemize}
+
+    \item Test Set Reservation:
+    \begin{itemize}
+        \item A reserved test set was created, comprising:
+        \begin{itemize}
+            \item The last 400 positive and 400 negative sequences from the VISTA dataset.
+            \item 400 random negative sequences from the GRCh38 genome.
+        \end{itemize}
+        \item These test sequences were excluded from any training or validation to prevent data leakage.
+    \end{itemize}
+
+\end{enumerate}
+
+\subsection{Counting K-mers}\label{subsec:counting-k-mers}
+
+The transform\_kmers\_dict\_to\_feature\_vector function is used to transform k-mer counts into a numerical feature vector that represents the sequence. This process is integral for extracting meaningful features from DNA sequences for machine learning models. Below is a step-by-step explanation of how the algorithm works:
+
+\begin{enumerate}
+
+    \item Generate K-mer Positions:
+    \begin{itemize}
+        \item The function begins by generating all possible k-mers of a specified length kk. This ensures that the feature space is predefined and consistent.
+        \item Each k-mer and its reverse complement are treated as a single feature, and palindromic k-mers (e.g., "ATCG" and its reverse "CGAT") are only represented once. This reduces redundancy and focuses on biologically meaningful patterns.
+    \end{itemize}
+
+    \item Initialize the Feature Vector:
+
+    \begin{itemize}
+        \item A feature vector is initialized as a zero-filled numpy array with a length equal to the number of unique k-mers (e.g., 136 for k=4).
+        \item Each position in the vector corresponds to a specific k-mer or its reverse complement.
+    \end{itemize}
+
+    \item Populate Frequencies:
+
+    \begin{itemize}
+        \item The function iterates over the precomputed k-mer list. For each k-mer in the sequence's dictionary:
+        \begin{itemize}
+            \item It retrieves the frequency of the k-mer and adds it to the respective position in the feature vector.
+            \item It also considers the reverse complement of the k-mer, summing the frequencies of both to ensure symmetry in the representation.
+        \end{itemize}
+    \end{itemize}
+
+    \item Output Feature Vector:
+    \begin{itemize}
+        \item The final feature vector contains the normalized frequencies of all unique k-mers in the DNA sequence, ready to be used as input for machine learning classifiers.
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Random Sequence Generation}\label{subsec:random-sequence-generation}
+
+The select\_random\_sequence function generates random DNA sequences from the genome, ensuring they do not overlap with known positive enhancer sequences. Below is a detailed explanation of how the algorithm works:
+
+\begin{enumerate}
+
+    \item Extract Positive Sequence Information:
+    \begin{itemize}
+        \item The function reads the genomic coordinates (coordinate\_hg38) of positive enhancer sequences from the provided dataset.
+        \item The chromosome, start, and end positions of these sequences are parsed and stored in a list of tuples for efficient lookup.
+    \end{itemize}
+
+    \item Define Allowed Limits:
+    \begin{itemize}
+        \item For each chromosome, regions not occupied by positive enhancer sequences are identified as "allowed limits."
+        \item These limits are computed by identifying gaps between the end of one positive sequence and the start of the next. Additionally, the regions before the first positive sequence and after the last positive sequence are included as valid.
+    \end{itemize}
+    
+    \item Random Chromosome and Position Selection:
+    \begin{itemize}
+        \item A random chromosome is chosen from the genome.
+        \item Within the selected chromosome, a random start position is generated within one of the allowed limits, ensuring no overlap with positive enhancer regions.
+    \end{itemize}
+    
+    \item Sequence Extraction:
+    \begin{itemize}
+        \item A sequence of the desired length is extracted from the genome, starting from the randomly selected position.
+        \item The algorithm verifies that the extracted sequence does not contain ambiguous nucleotides (N). If such characters are found, the process repeats until a valid sequence is obtained.
+    \end{itemize}
+
+\end{enumerate}
+
+\section{Classifier Training}\label{sec:classifier-training}
+
+The classifier chosen for this project is the XGBoost Classifier, implemented using the XGBClassifier class from the xgboost library. The training process utilized a pipeline that included both feature scaling and classification, with the following steps:
+
+\begin{enumerate}
+
+    \item Pipeline Design:
+    \begin{itemize}
+    \item A machine learning pipeline was created using Pipeline from sklearn.pipeline. This pipeline consisted of a StandardScaler to normalize k-mer feature vectors, ensuring uniformity in the feature distribution and the XGBoost Classifier, which is well-suited for structured datasets due to its ability to handle large feature spaces and complex interactions between features.
+
+    \end{itemize}
+    \item Choice of Classifier:
+    \begin{itemize}
+        \item XGBoost was selected for its robust performance in binary classification tasks, particularly with structured data like k-mer frequencies.
+        \item Its tree-based learning algorithm is capable of capturing non-linear patterns, which is crucial for identifying enhancer sequences with diverse and complex k-mer distributions.
+        \item XGBoost supports regularization parameters, which help prevent overfitting, a common concern when training models on biological datasets.
+    \end{itemize}
+    
+    \item Multiple Configurations:
+    \begin{itemize}
+        \item The classifier was trained with feature sets derived from k-mers of varying lengths (k=3,4,5). This allowed for a systematic exploration of how k-mer granularity affects model performance.
+        \item Different configurations of negative sequences were tested:
+        \begin{itemize}
+            \item Normal Negative Sequences: Non-enhancer sequences from the VISTA database.
+            \item Random Negative Sequences: Randomly extracted sequences from the genome that do not overlap with known enhancers.
+            \item Mixed Negative Sequences: A combination of the above two types.
+        \end{itemize}
+    
+    \end{itemize}
+    
+    \item Training and Validation:
+    \begin{itemize}
+        \item The training dataset was prepared using the transform\_vista\_dataset\_for\_classification function, which extracted and preprocessed k-mer features for both positive and negative sequences.
+        \item A 10-fold cross-validation was performed during model evaluation to ensure the robustness and generalizability of the classifier across different data splits.
+    \end{itemize}
+    
+    \item Justification for Choice:
+    \begin{itemize}
+        \item XGBoost was chosen for its efficiency in handling large feature spaces (e.g., k-mers for k=5) and its ability to provide feature importance scores, which are valuable for biological interpretation.
+        \item The scalability of XGBoost made it ideal for processing large datasets generated from k-mer counting, while its regularization techniques reduced the risk of overfitting to the training data.
+    \end{itemize}
+
+\end{enumerate}
+
+\section{Results}\label{sec:results}
+
+The results are presented in tables organized by k-mer length (kk) and training/testing dataset configurations. The tables summarize the accuracy, standard deviation, and detailed classification performance metrics.
+
+\subsection{Results Summary}\label{subsec:results-summary}
+For each k-mer length (k=3,4,5), the classifier across various combinations of training and testing datasets was evaluated:
+
+\begin{itemize}
+    \item Normal Negative Sequences
+    \item Random Negative Sequences
+    \item Mixed Negative Sequences
+\end{itemize}
+The following subsections detail the results for each k-mer length.
+
+\subsection{Results for k=3}\label{subsec:results-for-k=3}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|l|l|l|l|l|}
+        \hline
+        \textbf{Train Set} & \textbf{Test Set} & \textbf{Accuracy} & \textbf{Std Dev} & \textbf{Precision (0)} & \textbf{Recall (0)} & \textbf{Precision (1)} & \textbf{Recall (1)} \\
+        \hline
+        Normal Negative & Normal Negative & 0.56 & 0.052 & 0.51 & 0.36 & 0.51 & 0.66 \\
+        \hline
+        Normal Negative & Random Negative & 0.90 & 0.028 & 0.56 & 0.44 & 0.54 & 0.65 \\
+        \hline
+        Normal Negative & Mixed Negative & 0.89 & 0.022 & 0.54 & 0.40 & 0.52 & 0.65 \\
+        \hline
+        Random Negative & Normal Negative & 0.56 & 0.052 & 0.35 & 0.08 & 0.48 & 0.85 \\
+        \hline
+        Random Negative & Random Negative & 0.90 & 0.028 & 0.86 & 0.98 & 0.97 & 0.84 \\
+        \hline
+        Random Negative & Mixed Negative & 0.89 & 0.022 & 0.87 & 1.00 & 1.00 & 0.84 \\
+        \hline
+        Mixed Negative & Normal Negative & 0.56 & 0.052 & 0.67 & 0.66 & 0.67 & 0.68 \\
+        \hline
+        Mixed Negative & Random Negative & 0.90 & 0.028 & 0.75 & 0.96 & 0.94 & 0.68 \\
+        \hline
+        Mixed Negative & Mixed Negative & 0.89 & 0.022 & 0.74 & 0.92 & 0.90 & 0.68 \\
+        \hline
+    \end{tabular}
+    \caption{Results for \(k = 3\): Comparison of training and testing on different datasets.}
+    \label{tab:results_k3}
+\end{table}
+
+\subsection{Results for k=4}\label{subsec:results-for-k=4}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|l|l|l|l|l|}
+        \hline
+        \textbf{Train Set} & \textbf{Test Set} & \textbf{Accuracy} & \textbf{Std Dev} & \textbf{Precision (0)} & \textbf{Recall (0)} & \textbf{Precision (1)} & \textbf{Recall (1)} \\
+        \hline
+        Normal Negative & Normal Negative & 0.548 & 0.033 & 0.56 & 0.39 & 0.53 & 0.7 \\
+        \hline
+        Normal Negative & Random Negative & 0.906 & 0.03 & 0.61 & 0.47 & 0.57 & 0.7 \\
+        \hline
+        Normal Negative & Mixed Negative & 0.89 & 0.025 & 0.6 & 0.45 & 0.56 & 0.7 \\
+        \hline
+        Random Negative & Normal Negative & 0.548 & 0.033 & 0.42 & 0.1 & 0.49 & 0.85 \\
+        \hline
+        Random Negative & Random Negative & 0.906 & 0.03 & 0.87 & 0.95 & 0.95 & 0.85 \\
+        \hline
+        Random Negative & Mixed Negative & 0.89 & 0.025 & 0.87 & 0.99 & 0.99 & 0.85 \\
+        \hline
+        Mixed Negative & Normal Negative & 0.548 & 0.033 & 0.68 & 0.68 & 0.68 & 0.68 \\
+        \hline
+        Mixed Negative & Random Negative & 0.906 & 0.03 & 0.75 & 0.94 & 0.92 & 0.68 \\
+        \hline
+        Mixed Negative & Mixed Negative & 0.89 & 0.025 & 0.74 & 0.91 & 0.88 & 0.68 \\
+        \hline
+    \end{tabular}
+    \caption{Results for \(k = 4\): Comparison of training and testing on different datasets.}
+    \label{tab:results_k4}
+\end{table}
+
+\subsection{Results for k=5}\label{subsec:results-for-k=5}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|l|l|l|l|l|}
+        \hline
+        \textbf{Train Set} & \textbf{Test Set} & \textbf{Accuracy} & \textbf{Std Dev} & \textbf{Precision (0)} & \textbf{Recall (0)} & \textbf{Precision (1)} & \textbf{Recall (1)} \\
+        \hline
+        Normal Negative & Normal Negative & 0.562 & 0.045 & 0.56 & 0.33 & 0.52 & 0.74 \\
+        \hline
+        Normal Negative & Random Negative & 0.856 & 0.04 & 0.58 & 0.36 & 0.54 & 0.74 \\
+        \hline
+        Normal Negative & Mixed Negative & 0.865 & 0.024 & 0.6 & 0.4 & 0.55 & 0.74 \\
+        \hline
+        Random Negative & Normal Negative & 0.562 & 0.045 & 0.41 & 0.13 & 0.48 & 0.82 \\
+        \hline
+        Random Negative & Random Negative & 0.856 & 0.04 & 0.83 & 0.92 & 0.91 & 0.82 \\
+        \hline
+        Random Negative & Mixed Negative & 0.865 & 0.024 & 0.84 & 0.98 & 0.97 & 0.82 \\
+        \hline
+        Mixed Negative & Normal Negative & 0.562 & 0.045 & 0.69 & 0.67 & 0.68 & 0.7 \\
+        \hline
+        Mixed Negative & Random Negative & 0.856 & 0.04 & 0.75 & 0.93 & 0.91 & 0.7 \\
+        \hline
+        Mixed Negative & Mixed Negative & 0.865 & 0.024 & 0.75 & 0.9 & 0.87 & 0.7 \\
+        \hline
+    \end{tabular}
+    \caption{Results for \(k = 5\): Comparison of training and testing on different datasets.}
+    \label{tab:results_k5}
+\end{table}
+
+\section{Discussion}\label{sec:discussion}
+
+The results of the classification experiments reveal insights into the effectiveness of k-mer frequency-based features and the impact of training/testing configurations on the performance of enhancer sequence classifiers.
+
+\subsection{Impact of k-mer Length}\label{subsec:impact-of-k-mer-length}
+The results show that increasing the k-mer length improves classification performance, with higher accuracy and F1-scores observed for k=4 and k=5 compared to k=3. This improvement can be attributed to the ability of longer k-mers to capture more specific sequence patterns associated with enhancer activity. However, the performance gains taper off as k=5, suggesting diminishing returns when increasing k-mer length beyond a certain point.
+
+\subsection{Effect of Negative Sequence Composition}\label{subsec:effect-of-negative-sequence-composition}
+The type of negative sequences used during training and testing significantly influenced performance:
+
+\begin{itemize}
+    \item Models trained on random negative sequences consistently achieved higher accuracy and precision across test sets, as these sequences are more distinct from enhancer sequences. For instance, with k=4, training and testing on random negatives resulted in an accuracy of 90.63\%, demonstrating the classifier's ability to distinguish random sequences from enhancers effectively.
+    \item Conversely, mixed negative sequences presented a more challenging scenario, as they include sequences with characteristics that may overlap with enhancers. Despite this, the classifier achieved high performance (accuracy of 89\% for k=4).
+\end{itemize}
+
+\subsection{Generalization Across Test Sets}\label{subsec:generalization-across-test-sets}
+The results indicate that performance declines when the composition of the test set differs from that of the training set. For example, models trained on normal negatives but tested on random negatives exhibit lower precision and recall compared to consistent training/testing configurations. This suggests that the classifier may struggle to generalize to unseen data distributions, emphasizing the importance of representative test sets for evaluating model performance.
+
+\subsection{Class-Specific Performance}\label{subsec:class-specific-performance}
+Class-specific metrics reveal notable trends:
+\begin{itemize}
+    \item For class 1 (enhancers), precision and recall are generally higher across configurations, indicating the model's strength in identifying enhancer sequences.
+    \item For class 0 (non-enhancers), precision and recall are lower in scenarios involving mixed negatives, reflecting the challenge of distinguishing non-enhancers that share features with enhancers.
+\end{itemize}
+
+\subsection{Limitations}\label{subsec:limitations}
+While the models perform well, some limitations are evident:
+\begin{enumerate}
+    \item Bias Toward Random Negatives: The high performance on random negatives may overstate the model's real-world applicability, as random sequences are unlikely to occur naturally in biological datasets.
+    \item Limited Contextual Features: K-mer-based features, while effective, do not account for higher-order dependencies or 3D chromatin interactions, which are crucial for enhancer function.
+\end{enumerate}
+
+\section{Notes}\label{sec:notes}
+
+\begin{itemize}
+    \item Please find full classification report in results.json file.
+    \item Please find random negative sequences dataset in random\_negative\_sequences.tsv file.
+\end{itemize}
+
+\vspace{\baselineskip}
+
+\begin{thebibliography}{99}
+    \bibitem{website1}
+    \href{https://www.gencodegenes.org/human/release_14.html}{The GENCODE Project. Release 14 (GRCh38).}
+    \bibitem{website2}
+    \href{https://enhancer.lbl.gov/vista/}{VISTA Enhancer Database.}
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,920 @@
+[
+  {
+    "k": 3,
+    "Train Negative Sequences": "Normal Negative Sequences",
+    "Test Negative Sequences": "Normal Negative Sequences",
+    "accuracy": 0.5599999999999999,
+    "accuracy_std": 0.05208166663999915,
+    "classification_report": {
+      "0": {
+        "precision": 0.5106382978723404,
+        "recall": 0.36,
+        "f1-score": 0.4222873900293255,
+        "support": 400.0
+      },
+      "1": {
+        "precision": 0.5057915057915058,
+        "recall": 0.655,
+        "f1-score": 0.5708061002178649,
+        "support": 400.0
+      },
+      "accuracy": 0.5075,
+      "macro avg": {
+        "precision": 0.5082149018319231,
+        "recall": 0.5075000000000001,
+        "f1-score": 0.4965467451235952,
+        "support": 800.0
+      },
+      "weighted avg": {
+        "precision": 0.5082149018319231,
+        "recall": 0.5075,
+        "f1-score": 0.4965467451235952,
+        "support": 800.0
+      }
+    }
+  },
+  {
+    "k": 3,
+    "Train Negative Sequences": "Normal Negative Sequences",
+    "Test Negative Sequences": "Random Negative Sequences",
+    "accuracy": 0.9000000000000001,
+    "accuracy_std": 0.028504385627478444,
+    "classification_report": {
+      "0": {
+        "precision": 0.5632911392405063,
+        "recall": 0.445,
+        "f1-score": 0.4972067039106145,
+        "support": 400.0
+      },
+      "1": {
+        "precision": 0.5413223140495868,
+        "recall": 0.655,
+        "f1-score": 0.5927601809954751,
+        "support": 400.0
+      },
+      "accuracy": 0.55,
+      "macro avg": {
+        "precision": 0.5523067266450465,
+        "recall": 0.55,
+        "f1-score": 0.5449834424530449,
+        "support": 800.0
+      },
+      "weighted avg": {
+        "precision": 0.5523067266450465,
+        "recall": 0.55,
+        "f1-score": 0.5449834424530448,
+        "support": 800.0
+      }
+    }
+  },
+  {
+    "k": 3,
+    "Train Negative Sequences": "Normal Negative Sequences",
+    "Test Negative Sequences": "Mixed Negative Sequences",
+    "accuracy": 0.8975,
+    "accuracy_std": 0.0229128784747792,
+    "classification_report": {
+      "0": {
+        "precision": 0.5384615384615384,
+        "recall": 0.4025,
+        "f1-score": 0.46065808297567956,
+        "support": 400.0
+      },
+      "1": {
+        "precision": 0.5229540918163673,
+        "recall": 0.655,
+        "f1-score": 0.58157602663707,
+        "support": 400.0
+      },
+      "accuracy": 0.52875,
+      "macro avg": {
+        "precision": 0.5307078151389528,
+        "recall": 0.52875,
+        "f1-score": 0.5211170548063748,
+        "support": 800.0
+      },
+      "weighted avg": {
+        "precision": 0.5307078151389528,
+        "recall": 0.52875,
+        "f1-score": 0.5211170548063747,
+        "support": 800.0
+      }
+    }
+  },
+  {
+    "k": 3,
+    "Train Negative Sequences": "Random Negative Sequences",
+    "Test Negative Sequences": "Normal Negative Sequences",
+    "accuracy": 0.5599999999999999,
+    "accuracy_std": 0.05208166663999915,
+    "classification_report": {
+      "0": {
+        "precision": 0.3541666666666667,
+        "recall": 0.085,
+        "f1-score": 0.13709677419354838,
+        "support": 400.0
+      },
+      "1": {
+        "precision": 0.48011363636363635,
+        "recall": 0.845,
+        "f1-score": 0.6123188405797102,
+        "support": 400.0
+      },
+      "accuracy": 0.465,
+      "macro avg": {
+        "precision": 0.4171401515151515,
+        "recall": 0.46499999999999997,
+        "f1-score": 0.3747078073866293,
+        "support": 800.0
+      },
+      "weighted avg": {
+        "precision": 0.41714015151515155,
+        "recall": 0.465,
+        "f1-score": 0.3747078073866293,
+        "support": 800.0
+      }
+    }
+  },
+  {
+    "k": 3,
+    "Train Negative Sequences": "Random Negative Sequences",
+    "Test Negative Sequences": "Random Negative Sequences",
+    "accuracy": 0.9000000000000001,
+    "accuracy_std": 0.028504385627478444,
+    "classification_report": {
+      "0": {
+        "precision": 0.8637362637362638,
+        "recall": 0.9825,
+        "f1-score": 0.9192982456140351,
+        "support": 400.0
+      },
+      "1": {
+        "precision": 0.9797101449275363,
+        "recall": 0.845,
+        "f1-score": 0.9073825503355705,
+        "support": 400.0
+      },
+      "accuracy": 0.91375,
+      "macro avg": {
+        "precision": 0.9217232043319,
+        "recall": 0.9137500000000001,
+        "f1-score": 0.9133403979748027,
+        "support": 800.0
+      },
+      "weighted avg": {
+        "precision": 0.9217232043319001,
+        "recall": 0.91375,
+        "f1-score": 0.9133403979748027,
+        "support": 800.0
+      }
+    }
+  },
+  {
+    "k": 3,
+    "Train Negative Sequences": "Random Negative Sequences",
+    "Test Negative Sequences": "Mixed Negative Sequences",
+    "accuracy": 0.8975,
+    "accuracy_std": 0.0229128784747792,
+    "classification_report": {
+      "0": {
+        "precision": 0.8658008658008658,
+        "recall": 1.0,
+        "f1-score": 0.9280742459396751,
+        "support": 400.0
+      },
+      "1": {
+        "precision": 1.0,
+        "recall": 0.845,
+        "f1-score": 0.9159891598915989,
+        "support": 400.0
+      },
+      "accuracy": 0.9225,
+      "macro avg": {
+        "precision": 0.9329004329004329,
+        "recall": 0.9225,
+        "f1-score": 0.9220317029156371,
+        "support": 800.0
+      },
+      "weighted avg": {
+        "precision": 0.9329004329004329,
+        "recall": 0.9225,
+        "f1-score": 0.9220317029156371,
+        "support": 800.0
+      }
+    }
+  },
+  {
+    "k": 3,
+    "Train Negative Sequences": "Mixed Negative Sequences",
+    "Test Negative Sequences": "Normal Negative Sequences",
+    "accuracy": 0.5599999999999999,
+    "accuracy_std": 0.05208166663999915,
+    "classification_report": {
+      "0": {
+        "precision": 0.6785714285714286,
+        "recall": 0.665,
+        "f1-score": 0.6717171717171717,
+        "support": 400.0
+      },
+      "1": {
+        "precision": 0.6715686274509803,
+        "recall": 0.685,
+        "f1-score": 0.6782178217821783,
+        "support": 400.0
+      },
+      "accuracy": 0.675,
+      "macro avg": {
+        "precision": 0.6750700280112045,
+        "recall": 0.675,
+        "f1-score": 0.674967496749675,
+        "support": 800.0
+      },
+      "weighted avg": {
+        "precision": 0.6750700280112045,
+        "recall": 0.675,
+        "f1-score": 0.674967496749675,
+        "support": 800.0
+      }
+    }
+  },
+  {
+    "k": 3,
+    "Train Negative Sequences": "Mixed Negative Sequences",
+    "Test Negative Sequences": "Random Negative Sequences",
+    "accuracy": 0.9000000000000001,
+    "accuracy_std": 0.028504385627478444,
+    "classification_report": {
+      "0": {
+        "precision": 0.7529411764705882,
+        "recall": 0.96,
+        "f1-score": 0.843956043956044,
+        "support": 400.0
+      },
+      "1": {
+        "precision": 0.9448275862068966,
+        "recall": 0.685,
+        "f1-score": 0.7942028985507247,
+        "support": 400.0
+      },
+      "accuracy": 0.8225,
+      "macro avg": {
+        "precision": 0.8488843813387423,
+        "recall": 0.8225,
+        "f1-score": 0.8190794712533843,
+        "support": 800.0
+      },
+      "weighted avg": {
+        "precision": 0.8488843813387424,
+        "recall": 0.8225,
+        "f1-score": 0.8190794712533844,
+        "support": 800.0
+      }
+    }
+  },
+  {
+    "k": 3,
+    "Train Negative Sequences": "Mixed Negative Sequences",
+    "Test Negative Sequences": "Mixed Negative Sequences",
+    "accuracy": 0.8975,
+    "accuracy_std": 0.0229128784747792,
+    "classification_report": {
+      "0": {
+        "precision": 0.7459677419354839,
+        "recall": 0.925,
+        "f1-score": 0.8258928571428571,
+        "support": 400.0
+      },
+      "1": {
+        "precision": 0.9013157894736842,
+        "recall": 0.685,
+        "f1-score": 0.7784090909090909,
+        "support": 400.0
+      },
+      "accuracy": 0.805,
+      "macro avg": {
+        "precision": 0.823641765704584,
+        "recall": 0.805,
+        "f1-score": 0.802150974025974,
+        "support": 800.0
+      },
+      "weighted avg": {
+        "precision": 0.823641765704584,
+        "recall": 0.805,
+        "f1-score": 0.8021509740259739,
+        "support": 800.0
+      }
+    }
+  },
+  {
+    "k": 4,
+    "Train Negative Sequences": "Normal Negative Sequences",
+    "Test Negative Sequences": "Normal Negative Sequences",
+    "accuracy": 0.5475000000000001,
+    "accuracy_std": 0.03250000000000001,
+    "classification_report": {
+      "0": {
+        "precision": 0.56,
+        "recall": 0.385,
+        "f1-score": 0.4562962962962963,
+        "support": 400.0
+      },
+      "1": {
+        "precision": 0.5314285714285715,
+        "recall": 0.6975,
+        "f1-score": 0.6032432432432432,
+        "support": 400.0
+      },
+      "accuracy": 0.54125,
+      "macro avg": {
+        "precision": 0.5457142857142858,
+        "recall": 0.54125,
+        "f1-score": 0.5297697697697697,
+        "support": 800.0
+      },
+      "weighted avg": {
+        "precision": 0.5457142857142858,
+        "recall": 0.54125,
+        "f1-score": 0.5297697697697697,
+        "support": 800.0
+      }
+    }
+  },
+  {
+    "k": 4,
+    "Train Negative Sequences": "Normal Negative Sequences",
+    "Test Negative Sequences": "Random Negative Sequences",
+    "accuracy": 0.90625,
+    "accuracy_std": 0.030233466556119557,
+    "classification_report": {
+      "0": {
+        "precision": 0.6058631921824105,
+        "recall": 0.465,
+        "f1-score": 0.5261669024045261,
+        "support": 400.0
+      },
+      "1": {
+        "precision": 0.565922920892495,
+        "recall": 0.6975,
+        "f1-score": 0.6248600223964166,
+        "support": 400.0
+      },
+      "accuracy": 0.58125,
+      "macro avg": {
+        "precision": 0.5858930565374527,
+        "recall": 0.58125,
+        "f1-score": 0.5755134624004714,
+        "support": 800.0
+      },
+      "weighted avg": {
+        "precision": 0.5858930565374527,
+        "recall": 0.58125,
+        "f1-score": 0.5755134624004714,
+        "support": 800.0
+      }
+    }
+  },
+  {
+    "k": 4,
+    "Train Negative Sequences": "Normal Negative Sequences",
+    "Test Negative Sequences": "Mixed Negative Sequences",
+    "accuracy": 0.89,
+    "accuracy_std": 0.025495097567963917,
+    "classification_report": {
+      "0": {
+        "precision": 0.5966666666666667,
+        "recall": 0.4475,
+        "f1-score": 0.5114285714285715,
+        "support": 400.0
+      },
+      "1": {
+        "precision": 0.558,
+        "recall": 0.6975,
+        "f1-score": 0.62,
+        "support": 400.0
+      },
+      "accuracy": 0.5725,
+      "macro avg": {
+        "precision": 0.5773333333333334,
+        "recall": 0.5725,
+        "f1-score": 0.5657142857142857,
+        "support": 800.0
+      },
+      "weighted avg": {
+        "precision": 0.5773333333333334,
+        "recall": 0.5725,
+        "f1-score": 0.5657142857142857,
+        "support": 800.0
+      }
+    }
+  },
+  {
+    "k": 4,
+    "Train Negative Sequences": "Random Negative Sequences",
+    "Test Negative Sequences": "Normal Negative Sequences",
+    "accuracy": 0.5475000000000001,
+    "accuracy_std": 0.03250000000000001,
+    "classification_report": {
+      "0": {
+        "precision": 0.4158415841584158,
+        "recall": 0.105,
+        "f1-score": 0.16766467065868262,
+        "support": 400.0
+      },
+      "1": {
+        "precision": 0.48783977110157367,
+        "recall": 0.8525,
+        "f1-score": 0.6205641492265697,
+        "support": 400.0
+      },
+      "accuracy": 0.47875,
+      "macro avg": {
+        "precision": 0.45184067762999475,
+        "recall": 0.47875,
+        "f1-score": 0.39411440994262614,
+        "support": 800.0
+      },
+      "weighted avg": {
+        "precision": 0.45184067762999475,
+        "recall": 0.47875,
+        "f1-score": 0.3941144099426262,
+        "support": 800.0
+      }
+    }
+  },
+  {
+    "k": 4,
+    "Train Negative Sequences": "Random Negative Sequences",
+    "Test Negative Sequences": "Random Negative Sequences",
+    "accuracy": 0.90625,
+    "accuracy_std": 0.030233466556119557,
+    "classification_report": {
+      "0": {
+        "precision": 0.865909090909091,
+        "recall": 0.9525,
+        "f1-score": 0.9071428571428571,
+        "support": 400.0
+      },
+      "1": {
+        "precision": 0.9472222222222222,
+        "recall": 0.8525,
+        "f1-score": 0.8973684210526316,
+        "support": 400.0
+      },
+      "accuracy": 0.9025,
+      "macro avg": {
+        "precision": 0.9065656565656566,
+        "recall": 0.9025000000000001,
+        "f1-score": 0.9022556390977443,
+        "support": 800.0
+      },
+      "weighted avg": {
+        "precision": 0.9065656565656565,
+        "recall": 0.9025,
+        "f1-score": 0.9022556390977443,
+        "support": 800.0
+      }
+    }
+  },
+  {
+    "k": 4,
+    "Train Negative Sequences": "Random Negative Sequences",
+    "Test Negative Sequences": "Mixed Negative Sequences",
+    "accuracy": 0.89,
+    "accuracy_std": 0.025495097567963917,
+    "classification_report": {
+      "0": {
+        "precision": 0.8703296703296703,
+        "recall": 0.99,
+        "f1-score": 0.9263157894736842,
+        "support": 400.0
+      },
+      "1": {
+        "precision": 0.9884057971014493,
+        "recall": 0.8525,
+        "f1-score": 0.9154362416107382,
+        "support": 400.0
+      },
+      "accuracy": 0.92125,
+      "macro avg": {
+        "precision": 0.9293677337155598,
+        "recall": 0.92125,
+        "f1-score": 0.9208760155422112,
+        "support": 800.0
+      },
+      "weighted avg": {
+        "precision": 0.9293677337155597,
+        "recall": 0.92125,
+        "f1-score": 0.9208760155422112,
+        "support": 800.0
+      }
+    }
+  },
+  {
+    "k": 4,
+    "Train Negative Sequences": "Mixed Negative Sequences",
+    "Test Negative Sequences": "Normal Negative Sequences",
+    "accuracy": 0.5475000000000001,
+    "accuracy_std": 0.03250000000000001,
+    "classification_report": {
+      "0": {
+        "precision": 0.6809045226130653,
+        "recall": 0.6775,
+        "f1-score": 0.6791979949874687,
+        "support": 400.0
+      },
+      "1": {
+        "precision": 0.6791044776119403,
+        "recall": 0.6825,
+        "f1-score": 0.6807980049875312,
+        "support": 400.0
+      },
+      "accuracy": 0.68,
+      "macro avg": {
+        "precision": 0.6800045001125028,
+        "recall": 0.6799999999999999,
+        "f1-score": 0.6799979999874999,
+        "support": 800.0
+      },
+      "weighted avg": {
+        "precision": 0.6800045001125028,
+        "recall": 0.68,
+        "f1-score": 0.6799979999874999,
+        "support": 800.0
+      }
+    }
+  },
+  {
+    "k": 4,
+    "Train Negative Sequences": "Mixed Negative Sequences",
+    "Test Negative Sequences": "Random Negative Sequences",
+    "accuracy": 0.90625,
+    "accuracy_std": 0.030233466556119557,
+    "classification_report": {
+      "0": {
+        "precision": 0.7470119521912351,
+        "recall": 0.9375,
+        "f1-score": 0.8314855875831486,
+        "support": 400.0
+      },
+      "1": {
+        "precision": 0.9161073825503355,
+        "recall": 0.6825,
+        "f1-score": 0.7822349570200573,
+        "support": 400.0
+      },
+      "accuracy": 0.81,
+      "macro avg": {
+        "precision": 0.8315596673707852,
+        "recall": 0.81,
+        "f1-score": 0.806860272301603,
+        "support": 800.0
+      },
+      "weighted avg": {
+        "precision": 0.8315596673707852,
+        "recall": 0.81,
+        "f1-score": 0.8068602723016031,
+        "support": 800.0
+      }
+    }
+  },
+  {
+    "k": 4,
+    "Train Negative Sequences": "Mixed Negative Sequences",
+    "Test Negative Sequences": "Mixed Negative Sequences",
+    "accuracy": 0.89,
+    "accuracy_std": 0.025495097567963917,
+    "classification_report": {
+      "0": {
+        "precision": 0.7413441955193483,
+        "recall": 0.91,
+        "f1-score": 0.8170594837261503,
+        "support": 400.0
+      },
+      "1": {
+        "precision": 0.883495145631068,
+        "recall": 0.6825,
+        "f1-score": 0.770098730606488,
+        "support": 400.0
+      },
+      "accuracy": 0.79625,
+      "macro avg": {
+        "precision": 0.8124196705752081,
+        "recall": 0.79625,
+        "f1-score": 0.7935791071663192,
+        "support": 800.0
+      },
+      "weighted avg": {
+        "precision": 0.8124196705752081,
+        "recall": 0.79625,
+        "f1-score": 0.7935791071663192,
+        "support": 800.0
+      }
+    }
+  },
+  {
+    "k": 5,
+    "Train Negative Sequences": "Normal Negative Sequences",
+    "Test Negative Sequences": "Normal Negative Sequences",
+    "accuracy": 0.5625000000000001,
+    "accuracy_std": 0.0447213595499958,
+    "classification_report": {
+      "0": {
+        "precision": 0.5550847457627118,
+        "recall": 0.3275,
+        "f1-score": 0.4119496855345912,
+        "support": 400.0
+      },
+      "1": {
+        "precision": 0.5230496453900709,
+        "recall": 0.7375,
+        "f1-score": 0.6120331950207469,
+        "support": 400.0
+      },
+      "accuracy": 0.5325,
+      "macro avg": {
+        "precision": 0.5390671955763914,
+        "recall": 0.5325,
+        "f1-score": 0.5119914402776691,
+        "support": 800.0
+      },
+      "weighted avg": {
+        "precision": 0.5390671955763914,
+        "recall": 0.5325,
+        "f1-score": 0.5119914402776691,
+        "support": 800.0
+      }
+    }
+  },
+  {
+    "k": 5,
+    "Train Negative Sequences": "Normal Negative Sequences",
+    "Test Negative Sequences": "Random Negative Sequences",
+    "accuracy": 0.85625,
+    "accuracy_std": 0.04001952648395532,
+    "classification_report": {
+      "0": {
+        "precision": 0.5816733067729084,
+        "recall": 0.365,
+        "f1-score": 0.4485407066052227,
+        "support": 400.0
+      },
+      "1": {
+        "precision": 0.5373406193078324,
+        "recall": 0.7375,
+        "f1-score": 0.6217070600632244,
+        "support": 400.0
+      },
+      "accuracy": 0.55125,
+      "macro avg": {
+        "precision": 0.5595069630403704,
+        "recall": 0.55125,
+        "f1-score": 0.5351238833342236,
+        "support": 800.0
+      },
+      "weighted avg": {
+        "precision": 0.5595069630403704,
+        "recall": 0.55125,
+        "f1-score": 0.5351238833342236,
+        "support": 800.0
+      }
+    }
+  },
+  {
+    "k": 5,
+    "Train Negative Sequences": "Normal Negative Sequences",
+    "Test Negative Sequences": "Mixed Negative Sequences",
+    "accuracy": 0.865,
+    "accuracy_std": 0.02423839928708164,
+    "classification_report": {
+      "0": {
+        "precision": 0.6007604562737643,
+        "recall": 0.395,
+        "f1-score": 0.4766214177978884,
+        "support": 400.0
+      },
+      "1": {
+        "precision": 0.5493482309124768,
+        "recall": 0.7375,
+        "f1-score": 0.6296691568836713,
+        "support": 400.0
+      },
+      "accuracy": 0.56625,
+      "macro avg": {
+        "precision": 0.5750543435931206,
+        "recall": 0.56625,
+        "f1-score": 0.5531452873407798,
+        "support": 800.0
+      },
+      "weighted avg": {
+        "precision": 0.5750543435931205,
+        "recall": 0.56625,
+        "f1-score": 0.5531452873407798,
+        "support": 800.0
+      }
+    }
+  },
+  {
+    "k": 5,
+    "Train Negative Sequences": "Random Negative Sequences",
+    "Test Negative Sequences": "Normal Negative Sequences",
+    "accuracy": 0.5625000000000001,
+    "accuracy_std": 0.0447213595499958,
+    "classification_report": {
+      "0": {
+        "precision": 0.4126984126984127,
+        "recall": 0.13,
+        "f1-score": 0.19771863117870722,
+        "support": 400.0
+      },
+      "1": {
+        "precision": 0.4836795252225519,
+        "recall": 0.815,
+        "f1-score": 0.6070763500931099,
+        "support": 400.0
+      },
+      "accuracy": 0.4725,
+      "macro avg": {
+        "precision": 0.4481889689604823,
+        "recall": 0.4725,
+        "f1-score": 0.4023974906359086,
+        "support": 800.0
+      },
+      "weighted avg": {
+        "precision": 0.4481889689604823,
+        "recall": 0.4725,
+        "f1-score": 0.4023974906359086,
+        "support": 800.0
+      }
+    }
+  },
+  {
+    "k": 5,
+    "Train Negative Sequences": "Random Negative Sequences",
+    "Test Negative Sequences": "Random Negative Sequences",
+    "accuracy": 0.85625,
+    "accuracy_std": 0.04001952648395532,
+    "classification_report": {
+      "0": {
+        "precision": 0.832579185520362,
+        "recall": 0.92,
+        "f1-score": 0.8741092636579573,
+        "support": 400.0
+      },
+      "1": {
+        "precision": 0.9106145251396648,
+        "recall": 0.815,
+        "f1-score": 0.8601583113456465,
+        "support": 400.0
+      },
+      "accuracy": 0.8675,
+      "macro avg": {
+        "precision": 0.8715968553300134,
+        "recall": 0.8674999999999999,
+        "f1-score": 0.8671337875018019,
+        "support": 800.0
+      },
+      "weighted avg": {
+        "precision": 0.8715968553300134,
+        "recall": 0.8675,
+        "f1-score": 0.8671337875018019,
+        "support": 800.0
+      }
+    }
+  },
+  {
+    "k": 5,
+    "Train Negative Sequences": "Random Negative Sequences",
+    "Test Negative Sequences": "Mixed Negative Sequences",
+    "accuracy": 0.865,
+    "accuracy_std": 0.02423839928708164,
+    "classification_report": {
+      "0": {
+        "precision": 0.8408602150537634,
+        "recall": 0.9775,
+        "f1-score": 0.9040462427745665,
+        "support": 400.0
+      },
+      "1": {
+        "precision": 0.9731343283582089,
+        "recall": 0.815,
+        "f1-score": 0.8870748299319728,
+        "support": 400.0
+      },
+      "accuracy": 0.89625,
+      "macro avg": {
+        "precision": 0.9069972717059862,
+        "recall": 0.89625,
+        "f1-score": 0.8955605363532697,
+        "support": 800.0
+      },
+      "weighted avg": {
+        "precision": 0.9069972717059861,
+        "recall": 0.89625,
+        "f1-score": 0.8955605363532697,
+        "support": 800.0
+      }
+    }
+  },
+  {
+    "k": 5,
+    "Train Negative Sequences": "Mixed Negative Sequences",
+    "Test Negative Sequences": "Normal Negative Sequences",
+    "accuracy": 0.5625000000000001,
+    "accuracy_std": 0.0447213595499958,
+    "classification_report": {
+      "0": {
+        "precision": 0.6873385012919897,
+        "recall": 0.665,
+        "f1-score": 0.6759847522236341,
+        "support": 400.0
+      },
+      "1": {
+        "precision": 0.6755447941888619,
+        "recall": 0.6975,
+        "f1-score": 0.6863468634686347,
+        "support": 400.0
+      },
+      "accuracy": 0.68125,
+      "macro avg": {
+        "precision": 0.6814416477404258,
+        "recall": 0.68125,
+        "f1-score": 0.6811658078461345,
+        "support": 800.0
+      },
+      "weighted avg": {
+        "precision": 0.6814416477404258,
+        "recall": 0.68125,
+        "f1-score": 0.6811658078461343,
+        "support": 800.0
+      }
+    }
+  },
+  {
+    "k": 5,
+    "Train Negative Sequences": "Mixed Negative Sequences",
+    "Test Negative Sequences": "Random Negative Sequences",
+    "accuracy": 0.85625,
+    "accuracy_std": 0.04001952648395532,
+    "classification_report": {
+      "0": {
+        "precision": 0.7545638945233266,
+        "recall": 0.93,
+        "f1-score": 0.8331466965285554,
+        "support": 400.0
+      },
+      "1": {
+        "precision": 0.9087947882736156,
+        "recall": 0.6975,
+        "f1-score": 0.7892503536067893,
+        "support": 400.0
+      },
+      "accuracy": 0.81375,
+      "macro avg": {
+        "precision": 0.8316793413984711,
+        "recall": 0.81375,
+        "f1-score": 0.8111985250676723,
+        "support": 800.0
+      },
+      "weighted avg": {
+        "precision": 0.8316793413984712,
+        "recall": 0.81375,
+        "f1-score": 0.8111985250676724,
+        "support": 800.0
+      }
+    }
+  },
+  {
+    "k": 5,
+    "Train Negative Sequences": "Mixed Negative Sequences",
+    "Test Negative Sequences": "Mixed Negative Sequences",
+    "accuracy": 0.865,
+    "accuracy_std": 0.02423839928708164,
+    "classification_report": {
+      "0": {
+        "precision": 0.7484407484407485,
+        "recall": 0.9,
+        "f1-score": 0.8172531214528944,
+        "support": 400.0
+      },
+      "1": {
+        "precision": 0.8746081504702194,
+        "recall": 0.6975,
+        "f1-score": 0.7760778859527121,
+        "support": 400.0
+      },
+      "accuracy": 0.79875,
+      "macro avg": {
+        "precision": 0.811524449455484,
+        "recall": 0.7987500000000001,
+        "f1-score": 0.7966655037028032,
+        "support": 800.0
+      },
+      "weighted avg": {
+        "precision": 0.811524449455484,
+        "recall": 0.79875,
+        "f1-score": 0.7966655037028033,
+        "support": 800.0
+      }
+    }
+  }
+]
