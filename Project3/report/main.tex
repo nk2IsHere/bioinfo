@@ -17,6 +17,7 @@
 \usepackage{array}
 \usepackage{float}
 \usepackage{makecell}
+\usepackage{longtable}
 
 \setstretch{1.0} % Adjust the stretch factor as needed
 
@@ -36,7 +37,7 @@
     \vspace{1cm}
     {\scshape\Large Faculty of Mathematics and Information Science\par}
     \vspace{1.5cm}
-    {\huge\bfseries Project 2 Report\par}
+    {\huge\bfseries Project 3 Report\par}
     \vspace{1cm}
     {\Large\itshape Bioinformatics\par}
     \vfill
@@ -64,339 +65,465 @@
 
 \subsection{Aim}\label{subsec:aim}
 
-\subsection{Data}\label{subsec:data}
-\begin{enumerate}
-    \item VISTA Enhancer Database: A curated database of experimentally validated enhancers, primarily focused on human and mouse genomes. These sequences serve as positive examples of enhancers.
-    \item GENCODE Project: A comprehensive annotation of human and mouse genomes, providing additional DNA sequence data for testing the model's predictive capabilities.
-    \item Random DNA Sequences: These sequences do not overlap with validated enhancers in the VISTA database and are used as negative examples for training and evaluation.
-\end{enumerate}
+The aim of this project is to conduct a phylogenetic analysis of a set of protein sequences for a common set of species. The analysis will be based on the multiple sequence alignment of the sequences and the construction of a phylogenetic tree.
 
+8 human proteins were selected for the analysis. For these proteins, through the use of BLAST, sequences were obtained for 7 species with the similarity to the human proteins not higher than 97\%.
+
+Then, the sequences are aligned and clustered, and results are checked against the known taxonomy of the species.
+
+\subsection{Data}\label{subsec:data}
+
+Eight human proteins were selected for this analysis. For each protein, homologous sequences were obtained from different organisms using BLAST. Table~\ref{tab:proteins} lists the selected proteins and their general functions, while Table~\ref{tab:organisms} shows the organisms used in the analysis.
+
+\begin{table}[H]
+    \centering
+    \caption{Selected proteins for phylogenetic analysis}
+    \label{tab:proteins}
+    \begin{tabular}{|p{0.3\textwidth}|p{0.6\textwidth}|}
+        \hline
+        \textbf{Identifier} & \textbf{Protein Name} \\
+        \hline
+        CAA84380.1 & Human histamine H1 receptor \\
+        \hline
+        NP\_001381685.1 & TANK-binding kinase 1-binding protein 1 \\
+        \hline
+        AAA59172.1 & Insulin \\
+        \hline
+        1PPF\_E & Human leukocyte elastase \\
+        \hline
+        AAA63214.1 & Melanin concentrating hormone \\
+        \hline
+        AAB03393.1 & Thrombopoietin \\
+        \hline
+        AAB50706.1 & Ficolin \\
+        \hline
+        NP\_570139.3 & Tetraspanin-18 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Organisms selected for comparative analysis}
+    \label{tab:organisms}
+    \begin{tabular}{|l|l|}
+        \hline
+        \textbf{Scientific Name} & \textbf{Common Name} \\
+        \hline
+        Pongo abelii & Sumatran orangutan \\
+        Macaca fascicularis & Crab-eating macaque \\
+        Cercocebus atys & Sooty mangabey \\
+        Trachypithecus francoisi & François's langur \\
+        Piliocolobus tephrosceles & Ugandan red colobus \\
+        Eulemur rufifrons & Red-fronted lemur \\
+        Macaca mulatta & Rhesus macaque \\
+        Macaca nemestrina & Southern pig-tailed macaque \\
+        \hline
+    \end{tabular}
+\end{table}
+
+The sequences were selected to maintain sufficient evolutionary distance while ensuring reliable sequence alignment. All sequences show less than 97\% identity to their human homologs, allowing for meaningful phylogenetic analysis. The selected organisms represent different primate lineages, including Old World monkeys, New World monkeys, and prosimians, providing a broad evolutionary perspective for the analysis.
 
 \section{Methodology}\label{sec:methodology}
 
-\subsection{Data Preprocessing}\label{subsec:data-preprocessing}
+\subsection{Methods and algorithms}\label{subsec:methods-and-algorithms}
 
-Before training the classifier, the following preprocessing steps were performed to prepare the data:
+The analysis was conducted using several bioinformatics tools and algorithms:
 
-\begin{enumerate}
+\paragraph{Sequence Analysis Tools}
+\begin{itemize}
+    \item BLAST (Basic Local Alignment Search Tool) for identifying homologous sequences
+    \item MUSCLE (MUltiple Sequence Comparison by Log-Expectation) for multiple sequence alignment
+    \item CD-HIT for sequence clustering with 50\% identity threshold
+\end{itemize}
 
-    \item Data Collection and Parsing:
-    \begin{itemize}
-        \item Positive Examples: DNA sequences with a curation status of 'positive' were extracted from the VISTA Enhancer Database (experiments.tsv.gz). These sequences represent experimentally validated enhancers.
-        \item Negative Examples:
-            \begin{itemize}
-            \item Sequences with a curation status of 'negative' were extracted from the same VISTA database.
-            \item Random sequences were generated from the GRCh38 genome FASTA file, ensuring:
-            \begin{itemize}
-                \item No overlap with known enhancer sequences.
-                \item Equal sequence lengths to the positive examples.
-                \item Exclusion of sequences containing ambiguous nucleotides (N).
-            \end{itemize}
-        \end{itemize}
-    \end{itemize}
+\paragraph{Programming Libraries}
+\begin{itemize}
+    \item BioPython for sequence manipulation and phylogenetic analysis
+    \item Bio.Phylo for tree construction and visualization
+    \item Bio.AlignIO for handling multiple sequence alignments
+    \item Bio.SeqIO for sequence file parsing
+\end{itemize}
 
-    \item Sequence Standardization:
-    \begin{itemize}
-        \item All DNA sequences were normalized to uppercase letters (A, T, C, G) for uniformity.
-        \item Sequences with invalid characters (e.g., N) or other anomalies were excluded to maintain data quality.
-    \end{itemize}
+\paragraph{Distance Calculations}
+\begin{itemize}
+    \item Identity-based distance matrix calculation using BioPython's DistanceCalculator
+    \item Pairwise sequence comparison for evolutionary distance estimation
+\end{itemize}
 
-    \item K-mer Feature Extraction:
-    \begin{itemize}
-        \item A sliding window approach was implemented to extract k-mers of lengths ranging from 3 to 10 nucleotides from each sequence.
-        \item The frequency of each k-mer was calculated by dividing its count by the total length of the sequence, ensuring consistent scaling across varying sequence lengths.
-        \item Reverse complements of k-mers were treated as equivalent to reduce redundancy, with palindromic k-mers (e.g., ATCG == CGAT) counted only once. The Bio.Seq.reverse\_complement() function from Biopython was used for this purpose.
-    \end{itemize}
+\paragraph{Visualization Tools}
+\begin{itemize}
+    \item Matplotlib for tree visualization and plotting
+    \item BioPython's tree drawing functions for phylogenetic tree representation
+\end{itemize}
 
-    \item Label Assignment:
-    \begin{itemize}
-        \item Positive sequences were labeled as 1 (enhancers).
-        \item Negative sequences were labeled as 0 (non-enhancers).
-    \end{itemize}
+All analyses were performed using Python 3, with custom scripts for data processing and visualization. The complete analysis pipeline was automated to ensure reproducibility of results.
 
-    \item Dataset Balancing:
-    \begin{itemize}
-        \item An equal number of positive and negative sequences were ensured to prevent class imbalance during training.
-        \item The lengths of negative sequences were matched to those of the positive examples for consistency in feature representation.
-    \end{itemize}
+\subsection{Selection of Common Organisms}\label{subsec:selection-of-common-organisms}
 
-    \item Test Set Reservation:
-    \begin{itemize}
-        \item A reserved test set was created, comprising:
-        \begin{itemize}
-            \item The last 400 positive and 400 negative sequences from the VISTA dataset.
-            \item 400 random negative sequences from the GRCh38 genome.
-        \end{itemize}
-        \item These test sequences were excluded from any training or validation to prevent data leakage.
-    \end{itemize}
+The selection of organisms for comparative analysis was performed using an automated algorithm to ensure consistency across all protein groups. The process involves several steps:
 
-\end{enumerate}
+\noindent First, reference sequences for each human protein were collected and parsed using BioPython's SeqIO module.
 
-\subsection{Counting K-mers}\label{subsec:counting-k-mers}
-
-The transform\_kmers\_dict\_to\_feature\_vector function is used to transform k-mer counts into a numerical feature vector that represents the sequence. This process is integral for extracting meaningful features from DNA sequences for machine learning models. Below is a step-by-step explanation of how the algorithm works:
-
-\begin{enumerate}
-
-    \item Generate K-mer Positions:
-    \begin{itemize}
-        \item The function begins by generating all possible k-mers of a specified length kk. This ensures that the feature space is predefined and consistent.
-        \item Each k-mer and its reverse complement are treated as a single feature, and palindromic k-mers (e.g., "ATCG" and its reverse "CGAT") are only represented once. This reduces redundancy and focuses on biologically meaningful patterns.
-    \end{itemize}
-
-    \item Initialize the Feature Vector:
-
-    \begin{itemize}
-        \item A feature vector is initialized as a zero-filled numpy array with a length equal to the number of unique k-mers (e.g., 136 for k=4).
-        \item Each position in the vector corresponds to a specific k-mer or its reverse complement.
-    \end{itemize}
-
-    \item Populate Frequencies:
-
-    \begin{itemize}
-        \item The function iterates over the precomputed k-mer list. For each k-mer in the sequence's dictionary:
-        \begin{itemize}
-            \item It retrieves the frequency of the k-mer and adds it to the respective position in the feature vector.
-            \item It also considers the reverse complement of the k-mer, summing the frequencies of both to ensure symmetry in the representation.
-        \end{itemize}
-    \end{itemize}
-
-    \item Output Feature Vector:
-    \begin{itemize}
-        \item The final feature vector contains the normalized frequencies of all unique k-mers in the DNA sequence, ready to be used as input for machine learning classifiers.
-    \end{itemize}
-\end{enumerate}
-
-\subsection{Random Sequence Generation}\label{subsec:random-sequence-generation}
-
-The select\_random\_sequence function generates random DNA sequences from the genome, ensuring they do not overlap with known positive enhancer sequences. Below is a detailed explanation of how the algorithm works:
-
-\begin{enumerate}
-
-    \item Extract Positive Sequence Information:
-    \begin{itemize}
-        \item The function reads the genomic coordinates (coordinate\_hg38) of positive enhancer sequences from the provided dataset.
-        \item The chromosome, start, and end positions of these sequences are parsed and stored in a list of tuples for efficient lookup.
-    \end{itemize}
-
-    \item Define Allowed Limits:
-    \begin{itemize}
-        \item For each chromosome, regions not occupied by positive enhancer sequences are identified as "allowed limits."
-        \item These limits are computed by identifying gaps between the end of one positive sequence and the start of the next. Additionally, the regions before the first positive sequence and after the last positive sequence are included as valid.
-    \end{itemize}
-    
-    \item Random Chromosome and Position Selection:
-    \begin{itemize}
-        \item A random chromosome is chosen from the genome.
-        \item Within the selected chromosome, a random start position is generated within one of the allowed limits, ensuring no overlap with positive enhancer regions.
-    \end{itemize}
-    
-    \item Sequence Extraction:
-    \begin{itemize}
-        \item A sequence of the desired length is extracted from the genome, starting from the randomly selected position.
-        \item The algorithm verifies that the extracted sequence does not contain ambiguous nucleotides (N). If such characters are found, the process repeats until a valid sequence is obtained.
-    \end{itemize}
-
-\end{enumerate}
-
-\section{Classifier Training}\label{sec:classifier-training}
-
-The classifier chosen for this project is the XGBoost Classifier, implemented using the XGBClassifier class from the xgboost library. The training process utilized a pipeline that included both feature scaling and classification, with the following steps:
-
-\begin{enumerate}
-
-    \item Pipeline Design:
-    \begin{itemize}
-    \item A machine learning pipeline was created using Pipeline from sklearn.pipeline. This pipeline consisted of a StandardScaler to normalize k-mer feature vectors, ensuring uniformity in the feature distribution and the XGBoost Classifier, which is well-suited for structured datasets due to its ability to handle large feature spaces and complex interactions between features.
-
-    \end{itemize}
-    \item Choice of Classifier:
-    \begin{itemize}
-        \item XGBoost was selected for its robust performance in binary classification tasks, particularly with structured data like k-mer frequencies.
-        \item Its tree-based learning algorithm is capable of capturing non-linear patterns, which is crucial for identifying enhancer sequences with diverse and complex k-mer distributions.
-        \item XGBoost supports regularization parameters, which help prevent overfitting, a common concern when training models on biological datasets.
-    \end{itemize}
-    
-    \item Multiple Configurations:
-    \begin{itemize}
-        \item The classifier was trained with feature sets derived from k-mers of varying lengths (k=3,4,5). This allowed for a systematic exploration of how k-mer granularity affects model performance.
-        \item Different configurations of negative sequences were tested:
-        \begin{itemize}
-            \item Normal Negative Sequences: Non-enhancer sequences from the VISTA database.
-            \item Random Negative Sequences: Randomly extracted sequences from the genome that do not overlap with known enhancers.
-            \item Mixed Negative Sequences: A combination of the above two types.
-        \end{itemize}
-    
-    \end{itemize}
-    
-    \item Training and Validation:
-    \begin{itemize}
-        \item The training dataset was prepared using the transform\_vista\_dataset\_for\_classification function, which extracted and preprocessed k-mer features for both positive and negative sequences.
-        \item A 10-fold cross-validation was performed during model evaluation to ensure the robustness and generalizability of the classifier across different data splits.
-    \end{itemize}
-    
-    \item Justification for Choice:
-    \begin{itemize}
-        \item XGBoost was chosen for its efficiency in handling large feature spaces (e.g., k-mers for k=5) and its ability to provide feature importance scores, which are valuable for biological interpretation.
-        \item The scalability of XGBoost made it ideal for processing large datasets generated from k-mer counting, while its regularization techniques reduced the risk of overfitting to the training data.
-    \end{itemize}
-
-\end{enumerate}
-
-\section{Results}\label{sec:results}
-
-The results are presented in tables organized by k-mer length (kk) and training/testing dataset configurations. The tables summarize the accuracy, standard deviation, and detailed classification performance metrics.
-
-\subsection{Results Summary}\label{subsec:results-summary}
-For each k-mer length (k=3,4,5), the classifier across various combinations of training and testing datasets was evaluated:
+\noindent For each protein, BLAST results were analyzed to identify homologous sequences from different organisms. The algorithm processes these raw sequences using the following steps:
 
 \begin{itemize}
-    \item Normal Negative Sequences
-    \item Random Negative Sequences
-    \item Mixed Negative Sequences
+    \item Parse all BLAST result files, extracting metadata including organism names and sequence identifiers
+    \item Count the frequency of each organism's appearance across all BLAST results
+    \item Sort organisms by their frequency of occurrence
+    \item Select the top 7 most common organisms that have homologs for most proteins
 \end{itemize}
-The following subsections detail the results for each k-mer length.
 
-\subsection{Results for k=3}\label{subsec:results-for-k=3}
+\noindent For each protein group, the algorithm then:
+\begin{itemize}
+    \item Takes the human reference sequence
+    \item Selects homologous sequences from the identified common organisms
+    \item Ensures no duplicate organisms are included
+    \item Creates a final set of exactly 8 sequences (1 human + 7 homologs)
+\end{itemize}
 
-\begin{table}[H]
+\noindent This approach ensures that:
+\begin{itemize}
+    \item Each protein group has the same set of organisms
+    \item The selected organisms have good coverage across all proteins
+    \item The selection process is systematic and reproducible
+\end{itemize}
+
+\noindent The organisms were selected based on their representation in BLAST results, resulting in a set of closely related primate species that allows for meaningful evolutionary comparison.
+
+\subsection{Analysis steps}\label{subsec:analysis-steps}
+
+
+The analysis was conducted through several sequential computational steps:
+
+\paragraph{Multiple Sequence Alignment (MSA)}
+All sequences were first merged into a single FASTA file for comprehensive analysis. The MUSCLE algorithm was used to perform multiple sequence alignment on the entire dataset. This approach ensures that:
+\begin{itemize}
+    \item All sequences are aligned consistently
+    \item Homologous positions across different proteins are identified
+    \item Gaps are introduced appropriately to maximize alignment quality
+\end{itemize}
+
+\paragraph{Distance Matrix Construction}
+Following the MSA, a distance matrix was constructed using the following steps:
+\begin{itemize}
+    \item The aligned sequences were processed using BioPython's AlignIO module
+    \item Pairwise distances were calculated using the 'identity' metric
+    \item The resulting distance matrix captures the evolutionary relationships between all sequences
+\end{itemize}
+
+\paragraph{Sequence Clustering}
+CD-HIT was employed for sequence clustering with the following parameters:
+\begin{itemize}
+    \item Sequence identity threshold (-c): 0.5
+    \item Word length (-n): 2
+\end{itemize}
+
+The clustering analysis revealed 8 distinct clusters, which showed strong correspondence with the original protein groups:
+\begin{itemize}
+    \item Cluster 0: TANK-binding kinase 1-binding protein 1
+    \item Cluster 1: Thrombopoietin
+    \item Cluster 2: Histamine H1 receptor
+    \item Cluster 3: Ficolin
+    \item Cluster 4: Human leukocyte elastase
+    \item Cluster 5: Tetraspanin-18
+    \item Cluster 6: Melanin concentrating hormone
+    \item Cluster 7: Insulin
+\end{itemize}
+
+This clustering result validates our initial protein selection, confirming that each group represents a distinct protein family with well-preserved sequence characteristics across different organisms.
+
+\paragraph{Tree Construction}
+Using the distance matrix, three different approaches to phylogenetic tree construction were implemented:
+
+\begin{enumerate}
+    \item \textbf{Individual Protein Trees:}
+    \begin{itemize}
+        \item Separate phylogenetic trees were constructed for each of the 8 protein groups
+        \item Each tree contained sequences from all selected organisms for that specific protein
+        \item UPGMA algorithm was used for tree construction
+    \end{itemize}
+
+    \item \textbf{Cluster-based Trees:}
+    \begin{itemize}
+        \item Separate trees were constructed for each CD-HIT cluster
+        \item This approach grouped sequences based on similarity rather than initial protein classification
+    \end{itemize}
+
+    \item \textbf{Comprehensive Tree:}
+    \begin{itemize}
+        \item A single large phylogenetic tree was constructed using all sequences
+        \item This tree provides a global view of relationships between all proteins and organisms
+    \end{itemize}
+\end{enumerate}
+
+\paragraph{Consensus Trees}
+Two types of consensus trees were generated to compare different classification approaches:
+\begin{itemize}
+    \item A majority consensus tree from all individual protein trees
+    \item A majority consensus tree from all cluster-based trees
+\end{itemize}
+
+\paragraph{Visualization}
+The trees were visualized with two different coloring schemes for comparative analysis:
+\begin{itemize}
+    \item Organism-based coloring: branches colored according to the source organism
+    \item Protein-based coloring: branches colored according to the protein group
+\end{itemize}
+
+\noindent This dual coloring approach allows for visual analysis of both evolutionary relationships between organisms and functional relationships between proteins.
+
+\noindent This clustering result validates our initial protein selection, confirming that each group represents a distinct protein family with well-preserved sequence characteristics across different organisms.
+
+\section{Results}\label{sec:random-sequence-generation}
+
+\subsection{Comparison of Protein Groups and Clusters}\label{subsec:comparison-of-protein-groups-and-clusters}
+
+The analysis revealed strong correspondence between the original protein groups and the clusters obtained through CD-HIT analysis. Figure \ref{fig:tree_comparison} shows the matching between original protein groups and their corresponding clusters:
+
+\begin{figure}[H]
     \centering
-    \begin{tabular}{|l|l|l|l|l|l|l|l|}
+    \begin{tabular}{|l|l|l|}
         \hline
-        \textbf{Train Set} & \textbf{Test Set} & \textbf{Accuracy} & \textbf{Std Dev} & \textbf{Precision (0)} & \textbf{Recall (0)} & \textbf{Precision (1)} & \textbf{Recall (1)} \\
+        \textbf{Original Group} & \textbf{Protein Name} & \textbf{Corresponding Cluster} \\
         \hline
-        Normal Negative & Normal Negative & 0.56 & 0.052 & 0.51 & 0.36 & 0.51 & 0.66 \\
-        \hline
-        Normal Negative & Random Negative & 0.90 & 0.028 & 0.56 & 0.44 & 0.54 & 0.65 \\
-        \hline
-        Normal Negative & Mixed Negative & 0.89 & 0.022 & 0.54 & 0.40 & 0.52 & 0.65 \\
-        \hline
-        Random Negative & Normal Negative & 0.56 & 0.052 & 0.35 & 0.08 & 0.48 & 0.85 \\
-        \hline
-        Random Negative & Random Negative & 0.90 & 0.028 & 0.86 & 0.98 & 0.97 & 0.84 \\
-        \hline
-        Random Negative & Mixed Negative & 0.89 & 0.022 & 0.87 & 1.00 & 1.00 & 0.84 \\
-        \hline
-        Mixed Negative & Normal Negative & 0.56 & 0.052 & 0.67 & 0.66 & 0.67 & 0.68 \\
-        \hline
-        Mixed Negative & Random Negative & 0.90 & 0.028 & 0.75 & 0.96 & 0.94 & 0.68 \\
-        \hline
-        Mixed Negative & Mixed Negative & 0.89 & 0.022 & 0.74 & 0.92 & 0.90 & 0.68 \\
+        1PPF\_E & Human leukocyte elastase & Cluster 4 \\
+        NP\_570139 & Tetraspanin-18 & Cluster 5 \\
+        CAA84380 & Histamine H1 receptor & Cluster 2 \\
+        AAB50706 & Ficolin & Cluster 3 \\
+        AAB03393 & Thrombopoietin & Cluster 1 \\
+        AAA63214 & Melanin concentrating hormone & Cluster 6 \\
+        AAA59172 & Insulin & Cluster 7 \\
+        NP\_001381685 & TANK-binding kinase 1-binding protein 1 & Cluster 0 \\
         \hline
     \end{tabular}
-    \caption{Results for \(k = 3\): Comparison of training and testing on different datasets.}
-    \label{tab:results_k3}
-\end{table}
+    \caption{Correspondence between original protein groups and CD-HIT clusters}
+    \label{fig:tree_comparison}
+\end{figure}
 
-\subsection{Results for k=4}\label{subsec:results-for-k=4}
+Comparing the phylogenetic trees of corresponding groups and clusters reveals several interesting patterns:
 
-\begin{table}[H]
-    \centering
-    \begin{tabular}{|l|l|l|l|l|l|l|l|}
-        \hline
-        \textbf{Train Set} & \textbf{Test Set} & \textbf{Accuracy} & \textbf{Std Dev} & \textbf{Precision (0)} & \textbf{Recall (0)} & \textbf{Precision (1)} & \textbf{Recall (1)} \\
-        \hline
-        Normal Negative & Normal Negative & 0.548 & 0.033 & 0.56 & 0.39 & 0.53 & 0.7 \\
-        \hline
-        Normal Negative & Random Negative & 0.906 & 0.03 & 0.61 & 0.47 & 0.57 & 0.7 \\
-        \hline
-        Normal Negative & Mixed Negative & 0.89 & 0.025 & 0.6 & 0.45 & 0.56 & 0.7 \\
-        \hline
-        Random Negative & Normal Negative & 0.548 & 0.033 & 0.42 & 0.1 & 0.49 & 0.85 \\
-        \hline
-        Random Negative & Random Negative & 0.906 & 0.03 & 0.87 & 0.95 & 0.95 & 0.85 \\
-        \hline
-        Random Negative & Mixed Negative & 0.89 & 0.025 & 0.87 & 0.99 & 0.99 & 0.85 \\
-        \hline
-        Mixed Negative & Normal Negative & 0.548 & 0.033 & 0.68 & 0.68 & 0.68 & 0.68 \\
-        \hline
-        Mixed Negative & Random Negative & 0.906 & 0.03 & 0.75 & 0.94 & 0.92 & 0.68 \\
-        \hline
-        Mixed Negative & Mixed Negative & 0.89 & 0.025 & 0.74 & 0.91 & 0.88 & 0.68 \\
-        \hline
-    \end{tabular}
-    \caption{Results for \(k = 4\): Comparison of training and testing on different datasets.}
-    \label{tab:results_k4}
-\end{table}
-
-\subsection{Results for k=5}\label{subsec:results-for-k=5}
-
-\begin{table}[H]
-    \centering
-    \begin{tabular}{|l|l|l|l|l|l|l|l|}
-        \hline
-        \textbf{Train Set} & \textbf{Test Set} & \textbf{Accuracy} & \textbf{Std Dev} & \textbf{Precision (0)} & \textbf{Recall (0)} & \textbf{Precision (1)} & \textbf{Recall (1)} \\
-        \hline
-        Normal Negative & Normal Negative & 0.562 & 0.045 & 0.56 & 0.33 & 0.52 & 0.74 \\
-        \hline
-        Normal Negative & Random Negative & 0.856 & 0.04 & 0.58 & 0.36 & 0.54 & 0.74 \\
-        \hline
-        Normal Negative & Mixed Negative & 0.865 & 0.024 & 0.6 & 0.4 & 0.55 & 0.74 \\
-        \hline
-        Random Negative & Normal Negative & 0.562 & 0.045 & 0.41 & 0.13 & 0.48 & 0.82 \\
-        \hline
-        Random Negative & Random Negative & 0.856 & 0.04 & 0.83 & 0.92 & 0.91 & 0.82 \\
-        \hline
-        Random Negative & Mixed Negative & 0.865 & 0.024 & 0.84 & 0.98 & 0.97 & 0.82 \\
-        \hline
-        Mixed Negative & Normal Negative & 0.562 & 0.045 & 0.69 & 0.67 & 0.68 & 0.7 \\
-        \hline
-        Mixed Negative & Random Negative & 0.856 & 0.04 & 0.75 & 0.93 & 0.91 & 0.7 \\
-        \hline
-        Mixed Negative & Mixed Negative & 0.865 & 0.024 & 0.75 & 0.9 & 0.87 & 0.7 \\
-        \hline
-    \end{tabular}
-    \caption{Results for \(k = 5\): Comparison of training and testing on different datasets.}
-    \label{tab:results_k5}
-\end{table}
-
-\section{Discussion}\label{sec:discussion}
-
-The results of the classification experiments reveal insights into the effectiveness of k-mer frequency-based features and the impact of training/testing configurations on the performance of enhancer sequence classifiers.
-
-\subsection{Impact of k-mer Length}\label{subsec:impact-of-k-mer-length}
-The results show that increasing the k-mer length improves classification performance, with higher accuracy and F1-scores observed for k=4 and k=5 compared to k=3. This improvement can be attributed to the ability of longer k-mers to capture more specific sequence patterns associated with enhancer activity. However, the performance gains taper off as k=5, suggesting diminishing returns when increasing k-mer length beyond a certain point.
-
-\subsection{Effect of Negative Sequence Composition}\label{subsec:effect-of-negative-sequence-composition}
-The type of negative sequences used during training and testing significantly influenced performance:
-
-\begin{itemize}
-    \item Models trained on random negative sequences consistently achieved higher accuracy and precision across test sets, as these sequences are more distinct from enhancer sequences. For instance, with k=4, training and testing on random negatives resulted in an accuracy of 90.63\%, demonstrating the classifier's ability to distinguish random sequences from enhancers effectively.
-    \item Conversely, mixed negative sequences presented a more challenging scenario, as they include sequences with characteristics that may overlap with enhancers. Despite this, the classifier achieved high performance (accuracy of 89\% for k=4).
-\end{itemize}
-
-\subsection{Generalization Across Test Sets}\label{subsec:generalization-across-test-sets}
-The results indicate that performance declines when the composition of the test set differs from that of the training set. For example, models trained on normal negatives but tested on random negatives exhibit lower precision and recall compared to consistent training/testing configurations. This suggests that the classifier may struggle to generalize to unseen data distributions, emphasizing the importance of representative test sets for evaluating model performance.
-
-\subsection{Class-Specific Performance}\label{subsec:class-specific-performance}
-Class-specific metrics reveal notable trends:
-\begin{itemize}
-    \item For class 1 (enhancers), precision and recall are generally higher across configurations, indicating the model's strength in identifying enhancer sequences.
-    \item For class 0 (non-enhancers), precision and recall are lower in scenarios involving mixed negatives, reflecting the challenge of distinguishing non-enhancers that share features with enhancers.
-\end{itemize}
-
-\subsection{Limitations}\label{subsec:limitations}
-While the models perform well, some limitations are evident:
 \begin{enumerate}
-    \item Bias Toward Random Negatives: The high performance on random negatives may overstate the model's real-world applicability, as random sequences are unlikely to occur naturally in biological datasets.
-    \item Limited Contextual Features: K-mer-based features, while effective, do not account for higher-order dependencies or 3D chromatin interactions, which are crucial for enhancer function.
+    \item The topological structure of trees is highly conserved between original groups and their corresponding clusters. For example, the trees for Histamine H1 receptor (CAA84380) and Cluster 2 show identical branching patterns and similar branch lengths.
+
+    \item
+        Both approaches consistently group closely related species together:
+        \begin{itemize}
+            \item Macaca species (M. fascicularis, M. nemestrina, M. mulatta) consistently form tight clusters
+            \item Human (Homo sapiens) and Orangutan (Pongo abelii) are typically placed as sister groups
+            \item Old World monkeys (Cercocebus, Trachypithecus, Piliocolobus) form distinct clades
+        \end{itemize}
+
+    \item The branch lengths, representing evolutionary distances, are remarkably similar between corresponding trees, suggesting that both approaches capture similar evolutionary relationships.
+
+    \item Some differences are observed in the placement of more distant species like Eulemur rufifrons, particularly in proteins that show higher evolutionary rates.
 \end{enumerate}
 
-\section{Notes}\label{sec:notes}
+\subsection{Comparison of Individual Trees}\label{subsec:comparison-of-individual-trees}
 
+\begin{longtable}{|c|c|}
+%    \begin{tabular}
+        \hline
+        \textbf{Original Protein Tree} & \textbf{Corresponding Cluster Tree} \\
+        \hline
+        \includegraphics[width=0.45\textwidth]{1PPF_E.png} &
+        \includegraphics[width=0.45\textwidth]{Cluster 4.png} \\
+        \hline
+        \textit{Human leukocyte elastase (1PPF\_E)} & \textit{Cluster 4} \\
+        \hline
+        \includegraphics[width=0.45\textwidth]{NP_570139.png} &
+        \includegraphics[width=0.45\textwidth]{Cluster 5.png} \\
+        \hline
+        \textit{Tetraspanin-18 (NP\_570139)} & \textit{Cluster 5} \\
+        \hline
+        \includegraphics[width=0.45\textwidth]{CAA84380.png} &
+        \includegraphics[width=0.45\textwidth]{Cluster 2.png} \\
+        \hline
+        \textit{Histamine H1 receptor (CAA84380)} & \textit{Cluster 2} \\
+        \hline
+        \includegraphics[width=0.45\textwidth]{AAB50706.png} &
+        \includegraphics[width=0.45\textwidth]{Cluster 3.png} \\
+        \hline
+        \textit{Ficolin (AAB50706)} & \textit{Cluster 3} \\
+        \hline
+        \includegraphics[width=0.45\textwidth]{AAB03393.png} &
+        \includegraphics[width=0.45\textwidth]{Cluster 1.png} \\
+        \hline
+        \textit{Thrombopoietin (AAB03393)} & \textit{Cluster 1} \\
+        \hline
+        \includegraphics[width=0.45\textwidth]{AAA63214.png} &
+        \includegraphics[width=0.45\textwidth]{Cluster 6.png} \\
+        \hline
+        \textit{Melanin concentrating hormone (AAA63214)} & \textit{Cluster 6} \\
+        \hline
+        \includegraphics[width=0.45\textwidth]{AAA59172.png} &
+        \includegraphics[width=0.45\textwidth]{Cluster 7.png} \\
+        \hline
+        \textit{Insulin (AAA59172)} & \textit{Cluster 7} \\
+        \hline
+        \includegraphics[width=0.45\textwidth]{NP_001381685.png} &
+        \includegraphics[width=0.45\textwidth]{Cluster 0.png} \\
+        \hline
+        \textit{TANK-binding kinase 1-binding protein 1 (NP\_001381685)} & \textit{Cluster 0} \\
+        \hline
+%    \end{tabular}
+    \caption{Comparison between original protein trees and their corresponding cluster trees. The matching topology and branch lengths across all pairs demonstrate the consistency of the clustering approach with the original protein groupings.}
+    \label{fig:tree_pairs}
+\end{longtable}
+
+The comparison reveals perfect correspondence between the trees generated from original protein groups and their matching clusters. This remarkable similarity extends across all eight protein families, with identical topological structures and highly similar branch lengths. This correspondence validates both our initial protein selection and the effectiveness of the CD-HIT clustering algorithm in identifying natural protein families.
+
+\subsection{Consensus Trees Analysis}\label{subsec:consensus-trees-analysis}
+
+The consensus trees generated from both approaches - protein groups and clusters - provide insights into the overall evolutionary relationships between the studied organisms. Figure~\ref{fig:consensus_trees} shows both consensus trees colored by organism for direct comparison.
+
+\begin{figure}[H]
+    \centering
+    \begin{tabular}{cc}
+        \includegraphics[width=0.45\textwidth]{clusters_consensus_colored.png} &
+        \includegraphics[width=0.45\textwidth]{groups_consensus_colored.png} \\
+        (a) Cluster-based consensus tree & (b) Protein group-based consensus tree
+    \end{tabular}
+    \caption{Consensus trees from cluster-based and protein group-based analyses, colored by organism. Numbers at internal nodes represent the percentage of trees supporting each split.}
+    \label{fig:consensus_trees}
+\end{figure}
+
+Several key observations can be made from comparing these consensus trees:
+
+\begin{enumerate}
+    \item \textbf{Topology Similarities:}
+    \begin{itemize}
+        \item Both trees show similar major groupings with primates clustering together
+        \item Human (Homo sapiens) and orangutan (Pongo abelii) maintain their close evolutionary relationship
+    \end{itemize}
+
+    \item \textbf{Notable Differences:}
+    \begin{itemize}
+        \item The cluster consensus tree includes additional species like Panthera tigris and Sciurus carolinensis that appear in some but not all protein groups
+        \item Branch support values (shown as percentages at nodes) differ between the trees, suggesting varying levels of confidence in different evolutionary relationships
+    \end{itemize}
+
+    \item \textbf{Evolutionary Implications:}
+    \begin{itemize}
+        \item Support values of 75\% at the deepest nodes suggest strong confidence in the major evolutionary divisions
+        \item Lower support values (50-62.5\%) at some internal nodes indicate areas where evolutionary relationships are less certain
+    \end{itemize}
+\end{enumerate}
+
+The differences between the two consensus trees can be attributed to several factors:
+
+\begin{enumerate}
+    \item The CD-HIT clustering threshold (50\%) may group sequences slightly differently than the initial protein-based selection, particularly for more divergent homologs.
+    \item Consensus trees are based on the majority rule, which can lead to differences in branch support values depending on the number of trees supporting a particular split.
+    \item The algorithm behind may be non-deterministic, leading to slight variations in the consensus tree topology. Having more data (more sequences, more proteins) would likely increase the robustness of the consensus tree.
+\end{enumerate}
+
+\subsection{Full Tree Analysis with Different Coloring Schemes}\label{subsec:full-tree-analysis-with-different-coloring-schemes}
+
+The full phylogenetic tree containing all sequences was visualized using two different coloring schemes to highlight different aspects of evolutionary relationships. Figure~\ref{fig:full_trees} shows the complete tree colored by protein group and by organism.
+
+\begin{figure}[H]
+    \centering
+    \begin{tabular}{cc}
+        \includegraphics[width=0.45\textwidth]{full_colored_by_group.png} &
+        \includegraphics[width=0.45\textwidth]{full_colored.png} \\
+        (a) Colored by protein group & (b) Colored by organism
+    \end{tabular}
+    \caption{Full phylogenetic tree visualized with different coloring schemes. (a) Colors represent different protein families, showing functional grouping. (b) Colors represent different organisms, highlighting species relationships.}
+    \label{fig:full_trees}
+\end{figure}
+
+The two coloring schemes reveal different aspects of the evolutionary relationships:
+
+\begin{enumerate}
+    \item \textbf{Protein-based Coloring (a):}
+    \begin{itemize}
+        \item Clearly shows the clustering of protein families, with each color representing a distinct functional group
+        \item Demonstrates that sequence similarity is primarily driven by protein function rather than species relationships
+        \item Reveals deep evolutionary divergence between different protein families (long branches between different colors)
+        \item Shows conservation of protein function across species (same-colored clusters containing different organisms)
+    \end{itemize}
+
+    \item \textbf{Organism-based Coloring (b):}
+    \begin{itemize}
+        \item Highlights the distribution of species across different protein families
+        \item Shows that sequences from the same organism can be found in different parts of the tree
+        \item Demonstrates that evolutionary rates vary among different proteins within the same species
+        \item Reveals patterns of species-specific variation within protein families
+    \end{itemize}
+\end{enumerate}
+
+Key observations from comparing both colorings:
 \begin{itemize}
-    \item Please find full classification report in results.json file.
-    \item Please find random negative sequences dataset in random\_negative\_sequences.tsv file.
-    \item Please find full results table at the link here: \href{https://jsongrid.com?data=c1cc3ac1-ce10-4fcc-9612-2ee8df8cedad}{Results Table}.
+    \item The deepest branches in the tree separate different protein families rather than different organisms
+    \item Within each protein family cluster, sequences generally group by species relatedness
+    \item The TANK-binding kinase 1-binding protein 1 family (bottom cluster) shows the most distinct separation from other proteins
+    \item Some proteins show more species-specific variation than others, as indicated by the distribution of organism colors within protein groups
 \end{itemize}
 
-\vspace{\baselineskip}
+\subsection{Answers to the questions}\label{subsec:answers-to-the-questions}
 
-\begin{thebibliography}{99}
-    \bibitem{website1}
-    \href{https://www.gencodegenes.org/human/release_14.html}{The GENCODE Project. Release 14 (GRCh38).}
-    \bibitem{website2}
-    \href{https://enhancer.lbl.gov/vista/}{VISTA Enhancer Database.}
-\end{thebibliography}
+\paragraph{d) Observations and Best Approach}
+
+After analyzing the different approaches to tree construction and visualization, several key observations can be made:
+
+\paragraph{Tree Construction Approaches:}
+\begin{itemize}
+    \item Consensus trees provide a summarized view of evolutionary relationships but may lose some detail
+    \item The single tree from all sequences offers a more comprehensive view of evolutionary relationships across all proteins and species
+    \item The single tree approach better preserves the complexity of evolutionary relationships, showing both protein-specific and species-specific patterns
+\end{itemize}
+
+\paragraph{Coloring Approaches:}
+\begin{itemize}
+    \item Organism-based coloring highlights:
+    \begin{itemize}
+        \item Species distribution across different protein families
+        \item Consistency of evolutionary relationships within species
+        \item Variable evolutionary rates among species
+    \end{itemize}
+    \item Protein group-based coloring reveals:
+    \begin{itemize}
+        \item Clear separation between protein families
+        \item Functional clustering of sequences
+        \item Conservation of protein functions across species
+    \end{itemize}
+\end{itemize}
+
+The single tree with dual coloring schemes appears to work best for this analysis because:
+\begin{itemize}
+    \item It provides the most comprehensive view of both protein and species evolution
+    \item Different coloring schemes complement each other, revealing different aspects of evolution
+    \item It maintains all evolutionary information without the averaging effect seen in consensus trees
+    \item It allows direct comparison of evolutionary patterns between different protein families
+\end{itemize}
+
+\paragraph{e) Tree Similarity and Evolutionary Patterns}
+
+When comparing the different trees, we observe both similarities and differences:
+
+1. \textbf{Similarities:}
+\begin{itemize}
+    \item Major evolutionary relationships are conserved across all approaches
+    \item Primate species consistently cluster together
+    \item Branch lengths within protein families are comparable
+    \item The relative positions of closely related species (e.g., Macaca species) remain stable
+\end{itemize}
+
+2. \textbf{Differences:}
+\begin{itemize}
+    \item The cluster-based approach includes some additional species relationships, while excluding others
+    \item Support values for some internal nodes differ between approaches
+    \item The full tree shows more complex patterns than individual protein trees
+    \item Some species show different positions depending on the protein family being analyzed
+\end{itemize}
+
+The evolution does not look exactly the same in different trees because:
+\begin{itemize}
+    \item Different proteins evolve at different rates
+    \item Some proteins may be under different selective pressures in different species
+    \item The clustering approach may capture different aspects of sequence similarity
+    \item The consensus trees represent a "democratic average" of multiple evolutionary histories
+\end{itemize}
 
 \end{document}
